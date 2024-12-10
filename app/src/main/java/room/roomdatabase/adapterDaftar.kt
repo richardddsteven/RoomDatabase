@@ -4,10 +4,16 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import room.roomdatabase.database.daftarBelanja
+import room.roomdatabase.database.daftarHistory
+import room.roomdatabase.database.daftarHistoryDB
 
 class adapterDaftar (private val daftarBelanja: MutableList<daftarBelanja>) : RecyclerView.Adapter<adapterDaftar.ListViewHolder>() {
 
@@ -56,6 +62,22 @@ class adapterDaftar (private val daftarBelanja: MutableList<daftarBelanja>) : Re
         holder._btnDelete.setOnClickListener {
             onItemClickCallback.delData(daftar)
         }
+
+        holder._btnSelesai.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).async {
+                val historyDB = daftarHistoryDB.getDatabase(it.context)
+                historyDB.fundaftarHistoryDAO().insert(
+                    daftarHistory(
+                        tanggal = daftar.tanggal,
+                        item = daftar.item,
+                        jumlah = daftar.jumlah
+                    )
+                )
+                onItemClickCallback.delData(daftar)
+
+
+            }
+        }
     }
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -65,6 +87,7 @@ class adapterDaftar (private val daftarBelanja: MutableList<daftarBelanja>) : Re
 
         var  _btnEdit = itemView.findViewById<ImageButton>(R.id.btnEdit)
         var  _btnDelete = itemView.findViewById<ImageButton>(R.id.btnDelete)
+        var _btnSelesai = itemView.findViewById<Button>(R.id.btnSelesai)
 
     }
 }

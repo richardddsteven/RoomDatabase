@@ -40,6 +40,11 @@ class MainActivity : AppCompatActivity() {
         _fabAdd.setOnClickListener {
             startActivity(Intent(this, TambahDaftar::class.java))
         }
+        val fabHistory = findViewById<FloatingActionButton>(R.id.fabHistory)
+        fabHistory.setOnClickListener {
+            startActivity(Intent(this, history::class.java))
+        }
+
 
         adapterDaftar.setOnItemClickCallback(
             object : adapterDaftar.OnItemClickCallback {
